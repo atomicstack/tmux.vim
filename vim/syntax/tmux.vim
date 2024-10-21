@@ -1,5 +1,5 @@
 " Language: tmux(1) configuration file
-" Version: 3.4 (git-608d1134)
+" Version: 3.5 (git-6a35b8ad)
 " URL: https://github.com/ericpruitt/tmux.vim/
 " Maintainer: Eric Pruitt <eric.pruitt@gmail.com>
 " License: 2-Clause BSD (http://opensource.org/licenses/BSD-2-Clause)
@@ -28,7 +28,7 @@ syn match tmuxKey               /\(C-\|M-\|\^\)\+\S\+/ display
 syn match tmuxNumber            /\<\d\+\>/             display
 syn match tmuxFlags             /\s-\a\+/              display
 syn match tmuxVariableExpansion /\$\({[A-Za-z_]\w*}\|[A-Za-z_]\w*\)/ display
-syn match tmuxControl           /\(^\|\s\)%\(if\|elif\|else\|endif\)\($\|\s\)/ display
+syn match tmuxControl           /\(^\|\s\)%\(if\|elif\|else\|endif\|hidden\)\($\|\s\)/ display
 syn match tmuxEscape            /\\\(u\x\{4\}\|U\x\{8\}\|\o\{3\}\|[\\ernt$]\)/ display
 
 " Missing closing bracket.
@@ -37,7 +37,7 @@ syn match tmuxInvalidVariableExpansion /\${[^}]*$/ display
 syn match tmuxInvalidVariableExpansion /\${[^A-Za-z_][^}]*}/ display
 syn match tmuxInvalidVariableExpansion /\$[^A-Za-z_{ \t]/ display
 " Contains invalid character.
-syn match tmuxInvalidVariableExpansion /\${[^}]*[^A-Za-z0-9_][^}]*}/ display
+syn match tmuxInvalidVariableExpansion /\${[^}]*[^A-Za-z0-9_}][^}]*}/ display
 
 syn region tmuxComment start=/#/ skip=/\\\@<!\\$/ end=/$/ contains=tmuxTodo,@Spell
 
@@ -108,18 +108,19 @@ syn keyword tmuxOptions
 \ after-set-environment after-set-hook after-set-option after-show-environment
 \ after-show-messages after-show-options after-split-window after-unbind-key
 \ aggressive-resize alert-activity alert-bell alert-silence allow-passthrough
-\ allow-rename alternate-screen assume-paste-time automatic-rename
-\ automatic-rename-format backspace base-index bell-action buffer-limit
-\ client-active client-attached client-detached client-focus-in
+\ allow-rename allow-set-title alternate-screen assume-paste-time
+\ automatic-rename automatic-rename-format backspace base-index bell-action
+\ buffer-limit client-active client-attached client-detached client-focus-in
 \ client-focus-out client-resized client-session-changed clock-mode-color
-\ clock-mode-colour clock-mode-style command-alias copy-command
+\ clock-mode-colour clock-mode-style command-alias command-error copy-command
 \ copy-mode-current-match-style copy-mode-mark-style copy-mode-match-style
-\ cursor-color cursor-colour cursor-style default-command default-shell
-\ default-size default-terminal destroy-unattached detach-on-destroy
-\ display-panes-active-color display-panes-active-colour display-panes-color
-\ display-panes-colour display-panes-time display-time editor escape-time
-\ exit-empty exit-unattached extended-keys fill-character focus-events
-\ history-file history-limit key-table lock-after-time lock-command
+\ copy-mode-position-format cursor-color cursor-colour cursor-style
+\ default-command default-shell default-size default-terminal
+\ destroy-unattached detach-on-destroy display-panes-active-color
+\ display-panes-active-colour display-panes-color display-panes-colour
+\ display-panes-time display-time editor escape-time exit-empty exit-unattached
+\ extended-keys extended-keys-format fill-character focus-events history-file
+\ history-limit initial-repeat-time key-table lock-after-time lock-command
 \ main-pane-height main-pane-width menu-border-lines menu-border-style
 \ menu-selected-style menu-style message-command-style message-limit
 \ message-line message-style mode-keys mode-style monitor-activity monitor-bell
@@ -128,9 +129,10 @@ syn keyword tmuxOptions
 \ pane-border-indicators pane-border-lines pane-border-status pane-border-style
 \ pane-colors pane-colours pane-died pane-exited pane-focus-in pane-focus-out
 \ pane-mode-changed pane-set-clipboard pane-title-changed popup-border-lines
-\ popup-border-style popup-style prefix prefix2 prompt-history-limit
-\ remain-on-exit remain-on-exit-format renumber-windows repeat-time
-\ scroll-on-clear session-closed session-created session-renamed
+\ popup-border-style popup-style prefix prefix-timeout prefix2
+\ prompt-cursor-color prompt-cursor-colour prompt-cursor-style
+\ prompt-history-limit remain-on-exit remain-on-exit-format renumber-windows
+\ repeat-time scroll-on-clear session-closed session-created session-renamed
 \ session-window-changed set-clipboard set-titles set-titles-string
 \ silence-action status status-bg status-fg status-format status-interval
 \ status-justify status-keys status-left status-left-length status-left-style
@@ -172,10 +174,10 @@ syn keyword tmuxCommands
 
 syn keyword tmuxEnums
 \ absolute-centre all always any arrows bar blinking-bar blinking-block
-\ blinking-underline block both bottom centre color colour current default
-\ double emacs external failed heavy keep-group keep-last largest latest left
-\ manual next no-detached none number off on other padded previous right
-\ rounded simple single smallest top underline vi
+\ blinking-underline block both bottom centre color colour csi-u current
+\ default double emacs external failed heavy keep-group keep-last largest
+\ latest left manual next no-detached none number off on other padded previous
+\ right rounded simple single smallest top underline vi xterm
 
 let &cpo = s:original_cpo
 unlet! s:original_cpo s:bg s:i
